@@ -1,7 +1,7 @@
 # LTX
 
 Provisory README  
-LTX executes code blocks in markdown and mli docs to keep them updated.
+LTX executes code blocks in markdown and mli docs to keep them updated.  
 A special thank you to the creators of [mdx](https://github.com/realworldocaml/mdx), a lot of this codebase is reused from their source code.
 
 # Usage
