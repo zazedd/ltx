@@ -1,7 +1,8 @@
 # ltx
 
-Provisory README
+Provisory README  
 Latex stuff for ocaml
+A special thank you to the creators of [mdx](https://github.com/realworldocaml/mdx), a lot of this codebase is reused from their source code.
 
 # Usage
 You will need to create an environment for OCaml like this:
@@ -34,4 +35,6 @@ this will give you, once you've ran ltx:
 
 # TODO
 
-- [ ] if the code is not toplevel the errors are currently not being checked
+- [ ] If the code is not toplevel the errors are currently not being checked
+- [ ] Also write the errors from non-toplevel code
+- [ ] Instead of creating a .corrected file, backup and write over the input file
