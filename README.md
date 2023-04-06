@@ -22,7 +22,7 @@ Then, in your markdown do it just like mdx but with the normal Latex begin\end s
 \end{ocaml}
 ```
 
-will give you, once you've ran ltx  
+this will give you, once you've ran ltx:  
 
 
 ```tex
