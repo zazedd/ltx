@@ -1,4 +1,4 @@
-# ltx
+# LTX
 
 Provisory README  
 Latex stuff for ocaml
