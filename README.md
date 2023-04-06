@@ -1,7 +1,7 @@
 # LTX
 
 Provisory README  
-Latex stuff for ocaml
+Latex stuff for ocaml  
 A special thank you to the creators of [mdx](https://github.com/realworldocaml/mdx), a lot of this codebase is reused from their source code.
 
 # Usage
