@@ -1,25 +1,25 @@
 (lang dune 3.5)
 
-(name mdx)
+(name ltx)
 
 (cram disable)
 
 (source
- (github realworldocaml/mdx))
+ (github realworldocaml/ltx))
 
 (license ISC)
 
-(authors "Thomas Gazagnaire <thomas@gazagnaire.org>")
+(authors "Francisco Santos <franciscosantosfcp@hotmail.com>" "Leonardo Santos <leomendesantos@gmail.com" "Thomas Gazagnaire <thomas@gazagnaire.org>")
 
-(maintainers "Thomas Gazagnaire <thomas@gazagnaire.org>")
+(maintainers "Francisco Santos <franciscosantosfcp@hotmail.com>" "Leonardo Santos <leomendesantos@gmail.com")
 
 (generate_opam_files true)
 
 (package
- (name mdx)
- (synopsis "Executable code blocks inside markdown files")
+ (name ltx)
+ (synopsis "Executable code blocks inside latex files")
  (description
-   "`ocaml-mdx` allows to execute code blocks inside markdown files.\nThere are (currently) two sub-commands, corresponding\nto two modes of operations: pre-processing (`ocaml-mdx pp`)\nand tests (`ocaml-mdx test`).\n\nThe pre-processor mode allows to mix documentation and code,\nand to practice \"literate programming\" using markdown and OCaml.\n\nThe test mode allows to ensure that shell scripts and OCaml fragments\nin the documentation always stays up-to-date.")
+   "`ocaml-ltx` allows to execute code blocks inside markdown files.\nThere are (currently) two sub-commands, corresponding\nto two modes of operations: pre-processing (`ocaml-ltx pp`)\nand tests (`ocaml-ltx test`).\n\nThe pre-processor mode allows to mix documentation and code,\nand to practice \"literate programming\" using markdown and OCaml.\n\nThe test mode allows to ensure that shell scripts and OCaml fragments\nin the documentation always stays up-to-date.")
  (depends
   (ocaml
    (>= 4.08.0))

@@ -22,7 +22,7 @@ type directive = Directory of string | Load of string
 let redirect ~f =
   let stdout_backup = Unix.dup ~cloexec:true Unix.stdout in
   let stderr_backup = Unix.dup ~cloexec:true Unix.stderr in
-  let filename = Filename.temp_file "ocaml-mdx-" ".stdout" in
+  let filename = Filename.temp_file "ocaml-ltx-" ".stdout" in
   let fd_out =
     Unix.openfile filename Unix.[ O_WRONLY; O_CREAT; O_TRUNC; O_CLOEXEC ] 0o600
   in
@@ -135,7 +135,7 @@ module Phrase = struct
 
   let parse lines =
     let lines =
-      if Mdx.Block.ends_by_semi_semi lines then lines else lines @ [ ";;" ]
+      if Ltx.Block.ends_by_semi_semi lines then lines else lines @ [ ";;" ]
     in
     match parse lines with exception End_of_file -> None | t -> Some t
 
@@ -341,7 +341,7 @@ let toplevel_exec_phrase t ppf p =
         match phrase with
         | Ptop_dir _ as x -> x
         | Ptop_def s ->
-            Ptop_def (Pparse.apply_rewriters_str ~tool_name:"ocaml-mdx" s)
+            Ptop_def (Pparse.apply_rewriters_str ~tool_name:"ocaml-ltx" s)
       in
       Rewrite.preload t.verbose_findlib ppf;
       let phrase = Rewrite.phrase phrase in
@@ -382,7 +382,7 @@ let trim l = ltrim (rtrim (List.map trim_line l))
 let cut_into_sentences l =
   let rec aux acc sentence = function
     | [] -> List.rev (List.rev sentence :: acc)
-    | h :: t when Mdx.Block.ends_by_semi_semi [ h ] ->
+    | h :: t when Ltx.Block.ends_by_semi_semi [ h ] ->
         aux (List.rev (h :: sentence) :: acc) [] t
     | h :: t -> aux acc (h :: sentence) t
   in
@@ -654,7 +654,7 @@ let init ~verbose:v ~silent:s ~verbose_findlib ~directives ~packages ~predicates
     () =
   Clflags.real_paths := false;
   Toploop.set_paths ();
-  Mdx.Compat.init_path ();
+  Ltx.Compat.init_path ();
   Toploop.toplevel_env := Compmisc.initial_env ();
   Sys.interactive := false;
   List.iter
@@ -723,7 +723,7 @@ let load_env env names objs =
   List.iter2 Toploop.setvalue names objs
 
 let in_env e f =
-  let env_name = Mdx.Ocaml_env.name e in
+  let env_name = Ltx.Ocaml_env.name e in
   if !first_call then (
     (* We will start from the *correct* initial environment with
        everything loaded, for each environment. *)

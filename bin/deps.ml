@@ -14,23 +14,23 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-open Mdx.Util.Result.Infix
+open Ltx.Util.Result.Infix
 
 let run (`Setup ()) (`Syntax syntax) (`File file) =
   let syntax =
-    match (syntax, Mdx.Syntax.infer ~file) with
+    match (syntax, Ltx.Syntax.infer ~file) with
     | Some s, _ | None, Some s -> s
     | None, None ->
         Printf.eprintf
-          "[mdx] Fatal error: could not infer syntax from filename %s, use the \
+          "[Ltx] Fatal error: could not infer syntax from filename %s, use the \
            --syntax option to specify a syntax.\n"
           file;
         exit 1
   in
-  Mdx.parse_file syntax file >>! fun doc ->
-  let deps = Mdx.Dep.of_lines doc in
-  let deps = List.map Mdx.Dep.to_sexp deps in
-  Printf.printf "%s" (Mdx.Util.Csexp.to_string (List deps));
+  Ltx.parse_file syntax file >>! fun doc ->
+  let deps = Ltx.Dep.of_lines doc in
+  let deps = List.map Ltx.Dep.to_sexp deps in
+  Printf.printf "%s" (Ltx.Util.Csexp.to_string (List deps));
   0
 
 let term = Cmdliner.Term.(const run $ Cli.setup $ Cli.syntax $ Cli.file)

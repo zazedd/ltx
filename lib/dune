@@ -1,6 +1,6 @@
 (library
- (name mdx)
- (public_name mdx)
+ (name ltx)
+ (public_name ltx)
  (preprocess
   (action
    (run %{bin:cppo} -V OCAML:%{ocaml_version} %{input-file})))

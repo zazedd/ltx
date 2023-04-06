@@ -42,7 +42,7 @@ let run (`Setup ()) _ _ _ _ _ _ _ _ _ _ =
   argv.(0) <- cmd;
   Log.debug (fun l -> l "executing %a" Fmt.(Dump.array string) argv);
   let pid = Unix.create_process cmd argv Unix.stdin Unix.stdout Unix.stderr in
-  let code = Mdx.Util.Process.wait ~pid in
+  let code = Ltx.Util.Process.wait ~pid in
   exit code
 
 open Cmdliner

@@ -173,7 +173,7 @@ let pp_footer ?syntax ppf _ =
   match syntax with
   | Some Syntax.Mli -> Fmt.string ppf "]}"
   | Some Syntax.Cram -> Fmt.string ppf "\n"
-  | Some Syntax.Markdown | None -> Fmt.string ppf "```\n"
+  | Some Syntax.Markdown | None -> Fmt.string ppf "\\end{ocaml}\n"
 
 let pp_legacy_labels ppf = function
   | [] -> ()
@@ -218,11 +218,11 @@ let pp_header ?syntax ppf t =
   | Some Syntax.Cram -> pp_labels ?syntax ppf t.labels
   | Some Syntax.Markdown | None ->
       if t.legacy_labels then
-        Fmt.pf ppf "```%a%a"
+        Fmt.pf ppf "\\begin{%a}%a"
           Fmt.(option Header.pp)
           (header t) pp_legacy_labels t.labels
       else
-        Fmt.pf ppf "%a```%a" (pp_labels ?syntax) t.labels
+        Fmt.pf ppf "%a\\end{%a}" (pp_labels ?syntax) t.labels
           Fmt.(option Header.pp)
           (header t)
 

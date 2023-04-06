@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-open Mdx
+open Ltx
 
 let run_exn (`Setup ()) (`Non_deterministic non_deterministic)
     (`Silent_eval silent_eval) (`Record_backtrace record_backtrace)
@@ -31,14 +31,14 @@ let run_exn (`Setup ()) (`Non_deterministic non_deterministic)
   let directives = [] in
   let packages =
     [
-      Mdx_test.Package.unix;
-      Mdx_test.Package.findlib_top;
-      Mdx_test.Package.findlib_internal;
-      Mdx_test.Package.compilerlibs_toplevel;
+      Ltx_test.Package.unix;
+      Ltx_test.Package.findlib_top;
+      Ltx_test.Package.findlib_internal;
+      Ltx_test.Package.compilerlibs_toplevel;
     ]
   in
-  let predicates = [ Mdx_test.Predicate.byte; Mdx_test.Predicate.toploop ] in
-  Mdx_test.run_exn ~non_deterministic ~silent_eval ~record_backtrace ~syntax
+  let predicates = [ Ltx_test.Predicate.byte; Ltx_test.Predicate.toploop ] in
+  Ltx_test.run_exn ~non_deterministic ~silent_eval ~record_backtrace ~syntax
     ~silent ~verbose_findlib ~prelude ~prelude_str ~file ~section ~root
     ~force_output ~output ~directives ~packages ~predicates
 
@@ -65,7 +65,7 @@ let run setup non_deterministic silent_eval record_backtrace syntax silent
   | Failure f ->
       prerr_endline f;
       1
-  | Mdx_test.Test_block_failure (block, msg) ->
+  | Ltx_test.Test_block_failure (block, msg) ->
       report_error_in_block block msg;
       1
 
@@ -83,7 +83,7 @@ let term =
 let info =
   let man = [] in
   let doc = "Execute and test code in documentation files." in
-  Cmd.info "ocaml-mdx-test" ~version:"%%VERSION%%" ~doc ~man
+  Cmd.info "ocaml-Ltx-test" ~version:"%%VERSION%%" ~doc ~man
 
 let cmd = Cmd.v info term
 let main () = Stdlib.exit @@ Cmd.eval' cmd

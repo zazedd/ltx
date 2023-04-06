@@ -11,11 +11,11 @@ let non_deterministic =
 
 let syntax =
   let parse s =
-    match Mdx.Syntax.of_string s with
+    match Ltx.Syntax.of_string s with
     | Some syntax -> `Ok syntax
     | None -> `Error (Format.sprintf "unrecognized syntax %S" s)
   in
-  let syntax = (parse, Mdx.Syntax.pp) in
+  let syntax = (parse, Ltx.Syntax.pp) in
   let doc =
     "Which syntax to use. Either 'markdown' (also 'normal'), 'cram', or 'mli'."
   in
@@ -68,13 +68,13 @@ let verbose_findlib =
 
 let prelude =
   let parse s =
-    let env, filename = Mdx.Prelude.env_and_payload s in
+    let env, filename = Ltx.Prelude.env_and_payload s in
     let parse, _pp = Arg.non_dir_file in
     match parse filename with
     | `Ok _ -> `Ok (env, filename)
     | `Error _ as e -> e
   in
-  let prelude = (parse, Mdx.Prelude.pp) in
+  let prelude = (parse, Ltx.Prelude.pp) in
   let doc =
     "A file to load as prelude. Can be prefixed with $(i,env:) to specify a \
      specific environment to load the prelude in. Multiple prelude files can \
@@ -93,8 +93,8 @@ let prelude_str =
      not contain any spaces. Multiple prelude strings can be provided: they \
      will be evaluated in the order they are provided on the command-line."
   in
-  let parse s = `Ok (Mdx.Prelude.env_and_payload s) in
-  let prelude = (parse, Mdx.Prelude.pp) in
+  let parse s = `Ok (Ltx.Prelude.env_and_payload s) in
+  let prelude = (parse, Ltx.Prelude.pp) in
   named
     (fun x -> `Prelude_str x)
     Arg.(

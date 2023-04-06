@@ -23,9 +23,9 @@ let run (`Setup ()) (`Prelude prelude) (`Directories dirs) =
   in
 
   let pp_ocaml_env ppf = function
-    | Mdx.Ocaml_env.Default -> Fmt.string ppf "Mdx.Ocaml_env.Default"
-    | Mdx.Ocaml_env.User_defined s ->
-        Fmt.pf ppf "(Mdx.Ocaml_env.User_defined %S)" s
+    | Ltx.Ocaml_env.Default -> Fmt.string ppf "Ltx.Ocaml_env.Default"
+    | Ltx.Ocaml_env.User_defined s ->
+        Fmt.pf ppf "(Ltx.Ocaml_env.User_defined %S)" s
   in
 
   let pp_env ppf = function
@@ -42,7 +42,7 @@ let run (`Setup ()) (`Prelude prelude) (`Directories dirs) =
   in
 
   line "let run_exn_defaults =";
-  line "  let open Mdx_test in";
+  line "  let open Ltx_test in";
   line "  let packages =";
   line "    Package.[";
   line "      unix;";
@@ -53,7 +53,7 @@ let run (`Setup ()) (`Prelude prelude) (`Directories dirs) =
   line "  in";
   line "  let predicates = Predicate.[ byte; toploop ] in";
   line "  let non_deterministic =";
-  line "    match Sys.getenv_opt \"MDX_RUN_NON_DETERMINISTIC\" with";
+  line "    match Sys.getenv_opt \"Ltx_RUN_NON_DETERMINISTIC\" with";
   line "    | Some _ -> true";
   line "    | None -> false";
   line "  in";
@@ -68,7 +68,7 @@ let run (`Setup ()) (`Prelude prelude) (`Directories dirs) =
   line "let file = Sys.argv.(1)";
   line "let prelude = %a" pp_preludes prelude;
   line "let directives = List.map (fun path ->";
-  line "  Mdx_top.Directory path) %a" pp_list dirs;
+  line "  Ltx_top.Directory path) %a" pp_list dirs;
   line "let _ = run_exn_defaults";
   line "  ~file";
   line "  ~prelude";

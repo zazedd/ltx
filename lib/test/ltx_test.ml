@@ -14,9 +14,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-open Mdx
+open Ltx
 open Astring
-open Mdx.Util.Result.Infix
+open Ltx.Util.Result.Infix
 
 let src = Logs.Src.create "cram.test"
 
@@ -132,7 +132,7 @@ let run_cram_tests ?syntax t ?root ppf temp_file
     let root = root_dir ?root ~block:t () in
     let unset_variables = Block.unset_variables t in
     let n = run_test ?root unset_variables temp_file test in
-    let lines = Mdx.Util.File.read_lines temp_file in
+    let lines = Ltx.Util.File.read_lines temp_file in
     let output_expected = test.output in
     let output_received = List.map output_from_line lines in
     let output_equal = Output.equal output_received output_expected in
@@ -158,7 +158,7 @@ let run_cram_tests ?syntax t ?root ppf temp_file
 let eval_test ?block ?root c cmd =
   Log.debug (fun l -> l "eval_test %a" Fmt.(Dump.list (Fmt.fmt "%S")) cmd);
   let root = root_dir ?root ?block () in
-  with_dir root (fun () -> Mdx_top.eval c cmd)
+  with_dir root (fun () -> Ltx_top.eval c cmd)
 
 let err_eval ~cmd lines =
   Fmt.epr "Got an error while evaluating:\n---\n%a\n---\n%a\n%!"
@@ -249,19 +249,19 @@ let run_toplevel_tests ?syntax ?root c ppf Toplevel.{ tests; end_pad } block =
   Option.iter (Fmt.pf ppf "\n%s") end_pad;
   Block.pp_footer ?syntax ppf block
 
-type file = { first : Mdx.Part.file; current : Mdx.Part.file }
+type file = { first : Ltx.Part.file; current : Ltx.Part.file }
 
 let files : (string, file) Hashtbl.t = Hashtbl.create 8
 
 let has_changed ~force_output { first; current } =
-  let contents = Mdx.Part.contents current in
-  if contents = Mdx.Part.contents first && force_output = false then None
+  let contents = Ltx.Part.contents current in
+  if contents = Ltx.Part.contents first && force_output = false then None
   else Some contents
 
 let read_parts file =
   try Hashtbl.find files file
   with Not_found -> (
-    match Mdx.Part.read file with
+    match Ltx.Part.read file with
     | exception Sys_error msg -> failwith msg
     | parts ->
         let f = { first = parts; current = parts } in
@@ -270,7 +270,7 @@ let read_parts file =
 
 let read_part file part =
   let parts = read_parts file in
-  match Mdx.Part.find parts.current ~part with
+  match Ltx.Part.find parts.current ~part with
   | None ->
       Fmt.failwith "Cannot find part %S in %s"
         (match part with None -> "" | Some p -> p)
@@ -315,7 +315,7 @@ let with_non_det ~on_skip_execution ~on_keep_old_output ~on_evaluation
 
 let preludes ~prelude ~prelude_str =
   let parse_str (env, content) = (env, [ content ]) in
-  let parse (env, file) = (env, Mdx.Util.File.read_lines file) in
+  let parse (env, file) = (env, Ltx.Util.File.read_lines file) in
   match (prelude, prelude_str) with
   | [], [] -> []
   | [], fs -> List.map parse_str fs
@@ -330,7 +330,7 @@ let run_exn ~non_deterministic ~silent_eval ~record_backtrace ~syntax ~silent
     match syntax with Some syntax -> Some syntax | None -> Syntax.infer ~file
   in
   let c =
-    Mdx_top.init ~verbose:(not silent_eval) ~silent ~verbose_findlib ~directives
+    Ltx_top.init ~verbose:(not silent_eval) ~silent ~verbose_findlib ~directives
       ~packages ~predicates ()
   in
   let preludes = preludes ~prelude ~prelude_str in
@@ -350,7 +350,7 @@ let run_exn ~non_deterministic ~silent_eval ~record_backtrace ~syntax ~silent
       | OCaml { non_det; env; errors; header = _ } ->
           let det () =
             assert (syntax <> Some Cram);
-            Mdx_top.in_env env (fun () ->
+            Ltx_top.in_env env (fun () ->
                 eval_ocaml ~block:t ?syntax ?root c ppf errors)
           in
           with_non_det non_deterministic non_det ~on_skip_execution:print_block
@@ -375,7 +375,7 @@ let run_exn ~non_deterministic ~silent_eval ~record_backtrace ~syntax ~silent
               List.iter
                 (fun (phrase : Toplevel.t) ->
                   match
-                    Mdx_top.in_env env (fun () ->
+                    Ltx_top.in_env env (fun () ->
                         eval_test ~block:t ?root c phrase.command)
                   with
                   | Ok _ -> ()
@@ -386,18 +386,18 @@ let run_exn ~non_deterministic ~silent_eval ~record_backtrace ~syntax ~silent
                 phrases.tests)
             ~on_evaluation:(fun () ->
               assert (syntax <> Some Cram);
-              Mdx_top.in_env env (fun () ->
+              Ltx_top.in_env env (fun () ->
                   run_toplevel_tests ?syntax ?root c ppf phrases t))
     else print_block ()
   in
   let gen_corrected file_contents items =
-    let temp_file = Filename.temp_file "ocaml-mdx" ".output" in
+    let temp_file = Filename.temp_file "ocaml-Ltx" ".output" in
     at_exit (fun () -> Sys.remove temp_file);
     let buf = Buffer.create (String.length file_contents + 1024) in
     let ppf = Format.formatter_of_buffer buf in
     let envs = Document.envs items in
     let eval lines () = eval_raw ?root c lines in
-    let eval_in_env lines env = Mdx_top.in_env env (eval lines) in
+    let eval_in_env lines env = Ltx_top.in_env env (eval lines) in
     List.iter
       (function
         | `All, lines -> Ocaml_env.Set.iter (eval_in_env lines) envs
@@ -405,7 +405,7 @@ let run_exn ~non_deterministic ~silent_eval ~record_backtrace ~syntax ~silent
       preludes;
     List.iter
       (function
-        | (Mdx.Document.Section _ | Text _) as t -> Mdx.pp_line ?syntax ppf t
+        | (Ltx.Document.Section _ | Text _) as t -> Ltx.pp_line ?syntax ppf t
         | Block t -> (
             List.iter (fun (k, v) -> Unix.putenv k v) (Block.set_variables t);
             try test_block ~ppf ~temp_file t
@@ -415,10 +415,10 @@ let run_exn ~non_deterministic ~silent_eval ~record_backtrace ~syntax ~silent
     Buffer.contents buf
   in
   (match output with
-  | Some `Stdout -> Mdx.run_to_stdout ?syntax ~f:gen_corrected file
+  | Some `Stdout -> Ltx.run_to_stdout ?syntax ~f:gen_corrected file
   | Some (`File outfile) ->
-      Mdx.run_to_file ?syntax ~outfile ~f:gen_corrected file
-  | None -> Mdx.run ?syntax ~force_output ~f:gen_corrected file)
+      Ltx.run_to_file ?syntax ~outfile ~f:gen_corrected file
+  | None -> Ltx.run ?syntax ~force_output ~f:gen_corrected file)
   >>! fun () ->
   Hashtbl.iter (write_parts ~force_output) files;
   0

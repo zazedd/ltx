@@ -19,7 +19,7 @@ rule text section = parse
         newline lexbuf;
         `Section section :: text (Some section) lexbuf }
   | ( "<!--" ws* "$MDX" ws* ([^' ' '\n']* as label_cmt) ws* "-->" ws* eol? )?
-      "```" ([^' ' '\n']* as header) ws* ([^'\n']* as legacy_labels) eol
+      "\\begin{" ([^' ' '\n']* as header) '}' ws* ([^'\n']* as legacy_labels) eol
       { let start = Lexing.lexeme_start_p lexbuf in
         newline lexbuf;
         (match label_cmt with
@@ -56,7 +56,7 @@ rule text section = parse
         `Text str :: text section lexbuf }
 
 and block = parse
-  | eof | ws* as end_pad "```" ws* eol
+  | eof | ws* as end_pad "\\end{ocaml}" ws* eol
     { newline lexbuf;
       [end_pad] }
   | ([^'\n']* as str) eol

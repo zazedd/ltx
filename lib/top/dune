@@ -1,13 +1,13 @@
 (library
- (name mdx_top)
- (public_name mdx.top)
+ (name ltx_top)
+ (public_name ltx.top)
  (modes byte)
  (preprocess
   (action
    (run %{bin:cppo} -V OCAML:%{ocaml_version} %{input-file})))
  (libraries
   unix
-  mdx
+  ltx
   compiler-libs
   compiler-libs.toplevel
   threads

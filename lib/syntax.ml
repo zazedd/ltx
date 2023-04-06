@@ -10,7 +10,7 @@ let equal x y = x = y
 let infer ~file =
   match Filename.extension file with
   | ".t" -> Some Cram
-  | ".md" -> Some Markdown
+  | ".tex" -> Some Markdown
   | ".mli" -> Some Mli
   | _ -> None
 

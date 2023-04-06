@@ -1,4 +1,4 @@
-exception Test_block_failure of Mdx.Block.t * string
+exception Test_block_failure of Ltx.Block.t * string
 
 module Package : sig
   val unix : string
@@ -16,17 +16,17 @@ val run_exn :
   non_deterministic:bool ->
   silent_eval:bool ->
   record_backtrace:bool ->
-  syntax:Mdx.Syntax.t option ->
+  syntax:Ltx.Syntax.t option ->
   silent:bool ->
   verbose_findlib:bool ->
-  prelude:Mdx.Prelude.t list ->
-  prelude_str:Mdx.Prelude.t list ->
+  prelude:Ltx.Prelude.t list ->
+  prelude_str:Ltx.Prelude.t list ->
   file:string ->
   section:string option ->
   root:string option ->
   force_output:bool ->
   output:[ `File of string | `Stdout ] option ->
-  directives:Mdx_top.directive list ->
+  directives:Ltx_top.directive list ->
   packages:string list ->
   predicates:string list ->
   int

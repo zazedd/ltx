@@ -14,18 +14,18 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-open Mdx.Util.Result.Infix
+open Ltx.Util.Result.Infix
 
 let src = Logs.Src.create "cram.pp"
 
 module Log = (val Logs.src_log src : Logs.LOG)
-module Util = Mdx.Util
-module Block = Mdx.Block
-module Toplevel = Mdx.Toplevel
+module Util = Ltx.Util
+module Block = Ltx.Block
+module Toplevel = Ltx.Toplevel
 
 let vpad_of_lines t =
   let rec aux i = function
-    | h :: t when Mdx.Util.String.all_blank h -> aux (i + 1) t
+    | h :: t when Ltx.Util.String.all_blank h -> aux (i + 1) t
     | _ -> i
   in
   aux 0 t
@@ -73,23 +73,23 @@ let executable_contents (block : Block.t) =
          else (line, add_semi_semi contents))
 
 let run (`Setup ()) (`File file) (`Section section) =
-  Mdx.parse_file Markdown file >>! fun t ->
+  Ltx.parse_file Markdown file >>! fun t ->
   let t =
     match section with
     | None -> t
     | Some s -> (
         let re = Re.Perl.compile_pat s in
-        match Mdx.filter_section re t with None -> [] | Some t -> t)
+        match Ltx.filter_section re t with None -> [] | Some t -> t)
   in
   match t with
   | [] -> 1
   | t ->
       List.iter
         (function
-          | Mdx.Section _ | Text _ -> ()
-          | Block block when Mdx.Block.skip block -> ()
+          | Ltx.Section _ | Text _ -> ()
+          | Block block when Ltx.Block.skip block -> ()
           | Block block ->
-              Log.debug (fun l -> l "pp: %a" Mdx.Block.dump block);
+              Log.debug (fun l -> l "pp: %a" Ltx.Block.dump block);
               let pp_lines = Fmt.(list ~sep:(any "\n") string) in
               let contents = executable_contents block in
               List.iter
