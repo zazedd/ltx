@@ -15,7 +15,7 @@ You will need to create an environment for OCaml like this:
 ```
 Style it however you like
 
-Then, in your markdown do it just like mdx but with the normal Latex begin\end syntax:  
+Then, in your Latex do it just like mdx but with the normal begin\end syntax:  
 
 ```tex
 \begin{ocaml}
